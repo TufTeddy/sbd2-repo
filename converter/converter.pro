@@ -5,6 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui
+QMAKE_CXX_FLAGS += -std=c++11
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -26,10 +27,14 @@ CONFIG += c++11
 
 SOURCES += \
         main.cpp \
-        mainwindow.cpp
+        mainwindow.cpp \
+    tpnumber.cpp \
+    tpnumbereditor.cpp
 
 HEADERS += \
-        mainwindow.h
+        mainwindow.h \
+    tpnumber.h \
+    tpnumbereditor.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
