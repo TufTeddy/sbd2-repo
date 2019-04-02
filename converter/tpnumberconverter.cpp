@@ -18,21 +18,24 @@ TPNumber TPNumberConverter::from10(TPNumber number, int needBase)
     std::string answer;
     std::string temp;
 
-    int index = 0;
 
     while (intPart > 0)
     {
         answer.push_back(fromIntToChar(intPart % needBase));
         intPart /= needBase;
-        index++;
     }
     //qDebug() << QString::fromUtf8(answer.c_str());
     std::reverse(answer.begin(), answer.end());
+    int temp;
+    int index = 0;
 
     while (fracPart > 0)
     {
-        answer.push_back(fromIntToChar(intPart % needBase));
-        intPart /= needBase;
+        if (index >= _precision)
+            break;
+        temp = fracPart * needBase;
+        answer.push_back(fromIntToChar(temp));
+        fracPart -= temp;
         index++;
     }
 
@@ -43,6 +46,7 @@ TPNumber TPNumberConverter::from10(TPNumber number, int needBase)
 TPNumber TPNumberConverter::to10(TPNumber number, int curBase)
 {
     _currentBase = curBase;
+    _precision = number.getPrecision();
 
     double tempNumber = number.getNumber();
     int intPart = static_cast<int>(tempNumber);
@@ -72,10 +76,12 @@ TPNumber TPNumberConverter::to10(TPNumber number, int curBase)
     len = temp.length();
     power = -1;
     num = 0;
+    int c = 0;
     for (i = len-1; i >=0; i--){
         num += fromCharToChar(temp[i]) * power;
         power = power / curBase;
-        if (i >= precision())
+        c++;
+        if (c >= _precision)
             break;
     }
     num/=10000000;
