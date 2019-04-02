@@ -4,13 +4,13 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
 
-    //editorObject = new TPNumberEditor();
     tpnumberObject = new TPNumber(_number, _currentBase, _numbersAfterDivSign);
+    historyObject = new History();
+    historyObject->show();
     setViewOfMainWindow();
     checkButtonsToBase();
     QObject::connect(pBaseSlider, &QSlider::valueChanged,
                      this, &MainWindow::sliderEventSlot);
-    //QObject::connect(, &QPushButton::clicked, this, &MainWindow::buttonPushed);
     QObject::connect(transformButton, &QPushButton::clicked, this, &MainWindow::transformButtonSlot);
     QObject::connect(backSpaceButton, &QPushButton::clicked, this, &MainWindow::backSpaceButtonSlot);
     QObject::connect(clearAllButton, &QPushButton::clicked, this, &MainWindow::clearAllButtonSlot);
@@ -54,7 +54,7 @@ void MainWindow::backSpaceButtonSlot()
 
 void MainWindow::transformButtonSlot()
 {
-
+    historyObject->addRecord("fuck you");
 }
 
 void MainWindow::clearAllButtonSlot()
@@ -91,6 +91,10 @@ void MainWindow::setViewOfMainWindow()
 {
     setWindowFlags(Qt::Window | Qt::MSWindowsFixedSizeDialogHint);
     setFixedSize(400, 250);
+
+    QMenuBar menuBar;
+    menuBar.addSeparator();
+    menuBar.show();
 
     wholeLayout = new QGridLayout();
 
@@ -142,7 +146,6 @@ void MainWindow::setViewOfMainWindow()
     window = new QWidget();
     setCentralWidget(window);
     window->setLayout(wholeLayout);
-
 }
 
 void MainWindow::checkButtonsToBase()

@@ -29,12 +29,14 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
     tpnumber.cpp \
-    tpnumbereditor.cpp
+    tpnumberconverter.cpp \
+    history.cpp
 
 HEADERS += \
         mainwindow.h \
     tpnumber.h \
-    tpnumbereditor.h
+    tpnumberconverter.h \
+    history.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

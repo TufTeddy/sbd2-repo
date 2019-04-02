@@ -9,13 +9,14 @@
 #include <QVector>
 #include <QLabel>
 #include <QSignalMapper>
-#include "tpnumber.h"
-#include "tpnumbereditor.h"
 #include <QDebug>
 #include <QRegExpValidator>
 #include <QRegExp>
 #include <QValidator>
-
+#include <QMenu>
+#include <QMenuBar>
+#include "tpnumber.h"
+#include "history.h"
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -94,7 +95,8 @@ private:
     bool divSignPressed = false;
 
     TPNumber *tpnumberObject;
-    TPNumberEditor *editorObject;
+    //TPNumberEditor *editorObject;
+    History *historyObject;
 
 
 };
