@@ -5,9 +5,9 @@
 
 class TPNumber {
 public:
-    explicit TPNumber(double number = 0, int base = 10, int precision = 2);
+    explicit TPNumber(double number, int base, int precision);
 
-    explicit TPNumber(const std::string &number = "0.0", const std::string &base = "2", const std::string &precision = "7");
+    explicit TPNumber(std::string number,std::string base, std::string precision);
 
     TPNumber& operator=(const TPNumber &sec);
 

@@ -17,6 +17,8 @@
 #include <QMenuBar>
 #include "tpnumber.h"
 #include "history.h"
+#include "tpnumberconverter.h"
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -68,6 +70,7 @@ public slots:
     void transformButtonSlot();
     void clearAllButtonSlot();
     void dotButtonSlot();
+    void lineEditChangedSlot();
 
 private:
     QWidget *window;
@@ -87,15 +90,16 @@ private:
     QPushButton *dotButton;
 
     QValidator *validatorLineEdit;
-
+    QValidator *validatorPrecisionLineEdit;
     double _number = 0;
     int _currentBase = 2;
+    int _fromBase = 2;
     int _precision = 0;
     int _numbersAfterDivSign = 0;
     bool divSignPressed = false;
 
-    TPNumber *tpnumberObject;
     //TPNumberEditor *editorObject;
+    TPNumberConverter *converter;
     History *historyObject;
 
 

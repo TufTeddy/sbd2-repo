@@ -16,7 +16,7 @@ TPNumber::TPNumber(double number, int base, int precision) {
     }
 }
 
-TPNumber::TPNumber(const std::string &number, const std::string &base, const std::string &precision) {
+TPNumber::TPNumber(std::string number, std::string base, std::string precision) {
     try {
         _base = std::stoi(base);
         _precision = std::stoi(precision);

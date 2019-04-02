@@ -4,7 +4,8 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
 
-    tpnumberObject = new TPNumber(_number, _currentBase, _numbersAfterDivSign);
+    //tpnumberObject = new TPNumber(_number, _currentBase, _numbersAfterDivSign);
+    converter = new TPNumberConverter();
     historyObject = new History();
     historyObject->show();
     setViewOfMainWindow();
@@ -15,6 +16,7 @@ MainWindow::MainWindow(QWidget *parent)
     QObject::connect(backSpaceButton, &QPushButton::clicked, this, &MainWindow::backSpaceButtonSlot);
     QObject::connect(clearAllButton, &QPushButton::clicked, this, &MainWindow::clearAllButtonSlot);
     QObject::connect(dotButton, &QPushButton::clicked, this, &MainWindow::dotButtonSlot);
+    QObject::connect(pNumberLineEdit, &QLineEdit::textChanged, this, &MainWindow::lineEditChangedSlot);
 }
 
 MainWindow::~MainWindow()
@@ -54,7 +56,32 @@ void MainWindow::backSpaceButtonSlot()
 
 void MainWindow::transformButtonSlot()
 {
-    historyObject->addRecord("fuck you");
+    TPNumber tpnumberObject(pNumberLineEdit->text().toUtf8().toStdString(),
+                            QString::number(_fromBase).toStdString(),
+                            QString::number(_precision).toStdString());
+
+    _precision = precisionLineEdit->text().toInt();
+
+    if (_fromBase != 10){
+        tpnumberObject = converter->to10(tpnumberObject, _fromBase);
+        if (_currentBase == 10){
+            QString tempString = QString::fromStdString(tpnumberObject.getNumberAsString());
+            pNumberLineEdit->setText(tempString);
+            historyObject->addRecord(tempString);
+        }
+        else{
+            tpnumberObject = converter->from10(tpnumberObject, _currentBase);
+            QString tempString = QString::fromStdString(tpnumberObject.getNumberAsString());
+            pNumberLineEdit->setText(tempString);
+            historyObject->addRecord(tempString);
+        }
+    }
+    else {
+        tpnumberObject = converter->from10(tpnumberObject, _currentBase);
+        QString tempString = QString::fromStdString(tpnumberObject.getNumberAsString());
+        pNumberLineEdit->setText(tempString);
+        historyObject->addRecord(tempString);
+    }
 }
 
 void MainWindow::clearAllButtonSlot()
@@ -77,6 +104,12 @@ void MainWindow::dotButtonSlot()
     }
 }
 
+void MainWindow::lineEditChangedSlot()
+{
+    _fromBase = _currentBase;
+    qDebug() << _fromBase;
+}
+
 int MainWindow::getNumbersAfterDivSign() const
 {
     return _numbersAfterDivSign;
@@ -94,7 +127,7 @@ void MainWindow::setViewOfMainWindow()
 
     QMenuBar menuBar;
     menuBar.addSeparator();
-    menuBar.show();
+    
 
     wholeLayout = new QGridLayout();
 
@@ -112,6 +145,13 @@ void MainWindow::setViewOfMainWindow()
     pNumberLineEdit = new QLineEdit();
     precisionLineEdit = new QLineEdit();
     precisionLineEdit->setFixedWidth(95);
+
+    QString rxPrecLineEditString = QString("^[0-7]?$");
+    QRegExp rxPrecLineEdit(rxPrecLineEditString);
+    validatorPrecisionLineEdit = new QRegExpValidator(rxPrecLineEdit, this);
+    precisionLineEdit->setValidator(validatorPrecisionLineEdit);
+
+
     precisionLabel = new QLabel("Precision: ");
     currentBaseLabel = new QLabel(QStringLiteral("Current base: %1").arg(this->getCurrentBase()));
 
@@ -158,9 +198,9 @@ void MainWindow::checkButtonsToBase()
         vectorOfButtons[i]->setEnabled(true);
     }
 
-    QString rxLineEditString = QString("^[0-%1]*\\.[0-%1]*$").arg(_currentBase-1);
+    QString rxLineEditString = QString("^[0-%1]*\\.[0-%1]{7}$").arg(_currentBase-1);
     if(_currentBase > numbersInt::nine)
-        rxLineEditString = QString("^([0-%1]*[A-%2]*)*\\.([0-%1]*[A-%2]*)*")
+        rxLineEditString = QString("^([0-%1]*[A-%2]*)*\\.([0-%1]?[A-%2]?){7}")
                 .arg(numbersInt::nine)
                 .arg(QString('A' + _currentBase - numbersInt::B));
     //qDebug() << rxLineEditString << endl;

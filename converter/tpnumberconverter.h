@@ -1,23 +1,29 @@
 #ifndef TPNUMBERCONVERTER_H
 #define TPNUMBERCONVERTER_H
-//#include "tpnumber.h"
+#include "tpnumber.h"
 #include <QString>
+#include <cstdlib>
+#include <QDebug>
 
 class TPNumberConverter
 {
 public:
-    TPNumberConverter();
-    /*TPNumber from10(TPNumber number, int needBase, int precision);
-    TPNumber to10(TPNumber number, int curBase, int precision);
+    explicit TPNumberConverter();
+    TPNumber from10(TPNumber number, int needBase);
+    TPNumber to10(TPNumber number, int curBase);
 
     TPNumber number() const;
-    void setNumber(const TPNumber &number);*/
+    void setNumber(const TPNumber &number);
 
     int precision() const;
     void setPrecision(int precision);
+    char fromIntToChar(int num);
+    char fromCharToChar(char c);
+
 
 private:
-    //TPNumber _number;
+    int _currentBase;
+    int _neededBase;
     int _precision;
 };
 
