@@ -7,6 +7,7 @@ TPNumberConverter::TPNumberConverter()
 TPNumber TPNumberConverter::from10(TPNumber number, int needBase)
 {
     _neededBase = needBase;
+    _precision = number.getPrecision();
     qDebug() << QString::fromStdString(number.getNumberAsString()) << " " << needBase;
     int intPart = static_cast<int>(number.getNumber());
     double fracPart = number.getNumber() - intPart;
@@ -26,25 +27,30 @@ TPNumber TPNumberConverter::from10(TPNumber number, int needBase)
     }
     //qDebug() << QString::fromUtf8(answer.c_str());
     std::reverse(answer.begin(), answer.end());
-    int temp;
+    int tempInt = 0;
     int index = 0;
-
+    if (fracPart!= 0) answer.push_back('.');
+    fracPart /= 10000000;
     while (fracPart > 0)
     {
         if (index >= _precision)
             break;
-        temp = fracPart * needBase;
-        answer.push_back(fromIntToChar(temp));
-        fracPart -= temp;
+        tempInt = fracPart * needBase;
+        answer.push_back(fromIntToChar(tempInt));
+        fracPart = fracPart * needBase;
+        fracPart -= tempInt;
         index++;
     }
 
-    //qDebug() << QString::fromUtf8(answer.c_str());
+    qDebug() << QString::fromUtf8(answer.c_str());
+    //double fracPart = number.getNumber();
+   // std::string answer = std::to_string(fracPart);
     return TPNumber(answer, std::to_string(needBase), number.getPrecisionAsString());
 }
 
 TPNumber TPNumberConverter::to10(TPNumber number, int curBase)
 {
+    /*
     _currentBase = curBase;
     _precision = number.getPrecision();
 
@@ -70,7 +76,7 @@ TPNumber TPNumberConverter::to10(TPNumber number, int curBase)
     answer = std::to_string(num);
 
     fracPart *= 10000000;
-    temp = std::to_string(fracPart);
+    temp = std::to_string(static_cast<int>(fracPart));
 
     qDebug() << fracPart <<QString::fromStdString(temp);
     len = temp.length();
@@ -86,7 +92,10 @@ TPNumber TPNumberConverter::to10(TPNumber number, int curBase)
     }
     num/=10000000;
     answer = answer + "." + std::to_string(num);
-    qDebug() << QString::fromStdString(answer);
+    qDebug() << QString::fromStdString(answer);*/
+    double fracPart = number.getNumber();
+    std::string answer = std::to_string(fracPart);
+
     return TPNumber(answer, std::to_string(10), number.getPrecisionAsString());
 }
 
@@ -108,7 +117,7 @@ char TPNumberConverter::fromIntToChar(int num)
         return (char)(num - 10 + 'A');
 }
 
-char TPNumberConverter::fromCharToChar(char c)
+char TPNumberConverter::fromCharToInt(char c)
 {
     if (c >= '0' && c <= '9')
         return (int)c - '0';

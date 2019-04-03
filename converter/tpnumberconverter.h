@@ -18,7 +18,7 @@ public:
     int precision() const;
     void setPrecision(int precision);
     char fromIntToChar(int num);
-    char fromCharToChar(char c);
+    char fromCharToInt(char c);
 
 
 private:

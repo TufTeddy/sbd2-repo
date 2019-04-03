@@ -61,6 +61,8 @@ void MainWindow::transformButtonSlot()
                             QString::number(_precision).toStdString());
 
     _precision = precisionLineEdit->text().toInt();
+    tpnumberObject.setPrecision(_precision);
+    tpnumberObject.setBase(_currentBase);
 
     if (_fromBase != 10){
         tpnumberObject = converter->to10(tpnumberObject, _fromBase);
