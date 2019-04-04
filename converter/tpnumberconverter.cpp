@@ -43,8 +43,6 @@ TPNumber TPNumberConverter::from10(TPNumber number, int needBase)
     }
 
     qDebug() << QString::fromUtf8(answer.c_str());
-    //double fracPart = number.getNumber();
-   // std::string answer = std::to_string(fracPart);
     return TPNumber(answer, std::to_string(needBase), number.getPrecisionAsString());
 }
 

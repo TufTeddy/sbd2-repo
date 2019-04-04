@@ -3,11 +3,10 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
-
     //tpnumberObject = new TPNumber(_number, _currentBase, _numbersAfterDivSign);
     converter = new TPNumberConverter();
     historyObject = new History();
-    historyObject->show();
+    //historyObject->show();
     setViewOfMainWindow();
     checkButtonsToBase();
     QObject::connect(pBaseSlider, &QSlider::valueChanged,
@@ -56,6 +55,12 @@ void MainWindow::backSpaceButtonSlot()
 
 void MainWindow::transformButtonSlot()
 {
+    if (precisionLineEdit->text().isEmpty() && pNumberLineEdit->text().contains('.')) {
+            QMessageBox::warning(this, "No precision","Insert precision!");
+            return;
+        }
+    if (_currentBase == _fromBase)
+        return;
     TPNumber tpnumberObject(pNumberLineEdit->text().toUtf8().toStdString(),
                             QString::number(_fromBase).toStdString(),
                             QString::number(_precision).toStdString());
@@ -112,6 +117,11 @@ void MainWindow::lineEditChangedSlot()
     qDebug() << _fromBase;
 }
 
+void MainWindow::showHistory()
+{
+    historyObject->show();
+}
+
 int MainWindow::getNumbersAfterDivSign() const
 {
     return _numbersAfterDivSign;
@@ -125,11 +135,7 @@ void MainWindow::setNumbersAfterDivSign(int numbersAfterDivSign)
 void MainWindow::setViewOfMainWindow()
 {
     setWindowFlags(Qt::Window | Qt::MSWindowsFixedSizeDialogHint);
-    setFixedSize(400, 250);
-
-    QMenuBar menuBar;
-    menuBar.addSeparator();
-    
+    setFixedSize(400, 300);
 
     wholeLayout = new QGridLayout();
 
@@ -139,7 +145,7 @@ void MainWindow::setViewOfMainWindow()
     pBaseSlider->setTickPosition(QSlider::TicksBelow);
     pBaseSlider->setMaximum(numbersInt::sixteen);
 
-    transformButton = new QPushButton("Transform");
+    transformButton = new QPushButton("Convert");
     transformButton->setFixedHeight(40);
     backSpaceButton = new QPushButton("BS");
     clearAllButton = new QPushButton("Clear All");
@@ -185,9 +191,19 @@ void MainWindow::setViewOfMainWindow()
     wholeLayout->addWidget(backSpaceButton, 9, 1);
     wholeLayout->addWidget(clearAllButton, 9, 2, 1, 2);
 
+    verticLayout = new QVBoxLayout();
+    menubar = new QMenuBar();
+    menu = new QMenu("Menu");
+    menu->addAction("History", this, &MainWindow::showHistory, Qt::CTRL + Qt::Key_M);
+
+    menubar->addMenu(menu);
+    menubar->show();
+    verticLayout->addWidget(menubar);
+    verticLayout->addSpacing(10);
+    verticLayout->addLayout(wholeLayout);
     window = new QWidget();
     setCentralWidget(window);
-    window->setLayout(wholeLayout);
+    window->setLayout(verticLayout);
 }
 
 void MainWindow::checkButtonsToBase()

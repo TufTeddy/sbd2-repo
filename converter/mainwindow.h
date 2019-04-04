@@ -15,6 +15,8 @@
 #include <QValidator>
 #include <QMenu>
 #include <QMenuBar>
+#include <QLayout>
+#include <QMessageBox>
 #include "tpnumber.h"
 #include "history.h"
 #include "tpnumberconverter.h"
@@ -71,6 +73,7 @@ public slots:
     void clearAllButtonSlot();
     void dotButtonSlot();
     void lineEditChangedSlot();
+    void showHistory();
 
 private:
     QWidget *window;
@@ -84,11 +87,14 @@ private:
     QVector <QPushButton*> vectorOfButtons;
     QLabel *currentBaseLabel;
 
+    QMenuBar *menubar;
+    QMenu *menu;
+
     QPushButton *transformButton;
     QPushButton *backSpaceButton;
     QPushButton *clearAllButton;
     QPushButton *dotButton;
-
+    QVBoxLayout *verticLayout;
     QValidator *validatorLineEdit;
     QValidator *validatorPrecisionLineEdit;
     double _number = 0;
