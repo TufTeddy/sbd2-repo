@@ -4,15 +4,13 @@
 #
 #-------------------------------------------------
 
-QT       += core gui widgets testlib
+QT       += core gui
 QMAKE_CXX_FLAGS += -std=c++11
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = converter
 TEMPLATE = app
-
-SUBDIRS = tests_converter
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which has been marked as deprecated (the exact warnings
