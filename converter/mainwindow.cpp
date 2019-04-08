@@ -61,6 +61,9 @@ void MainWindow::transformButtonSlot()
         }
     if (_currentBase == _fromBase)
         return;
+    QString firstNumberString = pNumberLineEdit->text();
+    QString fromBaseString = QString::number(_fromBase);
+    QString tempString;
     TPNumber tpnumberObject(pNumberLineEdit->text().toUtf8().toStdString(),
                             QString::number(_fromBase).toStdString(),
                             QString::number(_precision).toStdString());
@@ -72,23 +75,22 @@ void MainWindow::transformButtonSlot()
     if (_fromBase != 10){
         tpnumberObject = converter->to10(tpnumberObject, _fromBase);
         if (_currentBase == 10){
-            QString tempString = QString::fromStdString(tpnumberObject.getNumberAsString());
+            tempString = QString::fromStdString(tpnumberObject.getNumberAsString());
             pNumberLineEdit->setText(tempString);
-            historyObject->addRecord(tempString);
         }
         else{
             tpnumberObject = converter->from10(tpnumberObject, _currentBase);
-            QString tempString = QString::fromStdString(tpnumberObject.getNumberAsString());
+            tempString = QString::fromStdString(tpnumberObject.getNumberAsString());
             pNumberLineEdit->setText(tempString);
-            historyObject->addRecord(tempString);
         }
     }
     else {
         tpnumberObject = converter->from10(tpnumberObject, _currentBase);
         QString tempString = QString::fromStdString(tpnumberObject.getNumberAsString());
         pNumberLineEdit->setText(tempString);
-        historyObject->addRecord(tempString);
     }
+    historyObject->addRecord(firstNumberString +"[" + fromBaseString + "] to " + tempString +
+                             "[" +QString::number(_currentBase) + "]");
 }
 
 void MainWindow::clearAllButtonSlot()
