@@ -57,7 +57,7 @@ void MainWindow::transformButtonSlot()
 {
     if (precisionLineEdit->text().isEmpty() && pNumberLineEdit->text().contains('.')) {
             QMessageBox::warning(this, "No precision","Insert precision!");
-            return;
+            return; 
         }
     if (_currentBase == _fromBase)
         return;

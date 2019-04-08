@@ -1,18 +1,15 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2019-03-19T18:44:33
+# Project created by QtCreator 2019-04-05T12:39:06
 #
 #-------------------------------------------------
 
-QT       += core gui widgets testlib
-QMAKE_CXX_FLAGS += -std=c++11
+QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = converter
+TARGET = multiCalculator
 TEMPLATE = app
-
-SUBDIRS = tests_converter
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which has been marked as deprecated (the exact warnings
@@ -30,15 +27,11 @@ CONFIG += c++11
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    tpnumber.cpp \
-    tpnumberconverter.cpp \
-    history.cpp
+    tanumber.cpp
 
 HEADERS += \
         mainwindow.h \
-    tpnumber.h \
-    tpnumberconverter.h \
-    history.h
+    tanumber.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
