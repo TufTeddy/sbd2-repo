@@ -63,7 +63,7 @@ void MainWindow::complexModButtonPushed()
     dotButton->setEnabled(true);
     fracPartButton->setEnabled(false);
     complexPartButton->setEnabled(true);
-    entryLineEdit->setText("0+i0");
+    entryLineEdit->setText("0+i*0");
 }
 
 void MainWindow::pnumberModButtonPushed()
@@ -151,7 +151,7 @@ void MainWindow::plusButtonPushed()
     if (mode == calcMode::complex){
         tempObj = new TComplex(entryLineEdit->text().toStdString());
         _number = tempObj;
-        entryLineEdit->setText("0+i0");
+        entryLineEdit->setText("0+i*0");
     }else if (mode == calcMode::frac){
         tempObj = new TFrac(entryLineEdit->text().toStdString());
         _number = tempObj;
@@ -175,7 +175,7 @@ void MainWindow::minusButtonPushed()
     if (mode == calcMode::complex){
         tempObj = new TComplex(entryLineEdit->text().toStdString());
         _number = tempObj;
-        entryLineEdit->setText("0+i0");
+        entryLineEdit->setText("0+i*0");
     }else if (mode == calcMode::frac){
         tempObj = new TFrac(entryLineEdit->text().toStdString());
         _number = tempObj;
@@ -199,7 +199,7 @@ void MainWindow::mulButtonPushed()
     if (mode == calcMode::complex){
         tempObj = new TComplex(entryLineEdit->text().toStdString());
         _number = tempObj;
-        entryLineEdit->setText("0+i0");
+        entryLineEdit->setText("0+i*0");
     }else if (mode == calcMode::frac){
         tempObj = new TFrac(entryLineEdit->text().toStdString());
         _number = tempObj;
@@ -223,7 +223,7 @@ void MainWindow::divButtonPushed()
     if (mode == calcMode::complex){
         tempObj = new TComplex(entryLineEdit->text().toStdString());
         _number = tempObj;
-        entryLineEdit->setText("0+i0");
+        entryLineEdit->setText("0+i*0");
     }else if (mode == calcMode::frac){
         tempObj = new TFrac(entryLineEdit->text().toStdString());
         _number = tempObj;
@@ -245,7 +245,7 @@ void MainWindow::resultButtonPushed()
         if (mode == calcMode::complex){
             tempObj = new TComplex(entryLineEdit->text().toStdString());
             _number = tempObj;
-            entryLineEdit->setText("0+i0");
+            entryLineEdit->setText("0+i*0");
         }else if (mode == calcMode::frac){
             tempObj = new TFrac(entryLineEdit->text().toStdString());
             _number = tempObj;
@@ -312,7 +312,7 @@ void MainWindow::clearAll()
     ctrlunit->clear();
     memoryLabel->hide();
     if (mode == calcMode::complex){
-        entryLineEdit->setText("0+i0");
+        entryLineEdit->setText("0+i*0");
     }else if (mode == calcMode::frac){
         entryLineEdit->setText("0/1");
     }else if (mode == calcMode::pnumber) {
@@ -323,7 +323,7 @@ void MainWindow::clearAll()
 void MainWindow::clearEntry()
 {
     if (mode == calcMode::complex){
-        entryLineEdit->setText("0+i0");
+        entryLineEdit->setText("0+i*0");
     }else if (mode == calcMode::frac){
         entryLineEdit->setText("0/1");
     }else if (mode == calcMode::pnumber) {

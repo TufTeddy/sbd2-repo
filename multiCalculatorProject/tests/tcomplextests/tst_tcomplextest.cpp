@@ -57,7 +57,7 @@ void tcomplextest::stringConstructor_data()
 
     QTest::newRow("stringConstructor") << "0+i*0 " << "0.000000" << "0.000000";
     QTest::newRow("stringConstructor") << "-2+i*4 " << "-2.000000" << "4.000000";
-    QTest::newRow("stringConstructor") << "10 + i*5" << "10.000000" << "5.000000";
+    QTest::newRow("stringConstructor") << "10+i*5" << "10.000000" << "5.000000";
 }
 
 void tcomplextest::summ_data()
