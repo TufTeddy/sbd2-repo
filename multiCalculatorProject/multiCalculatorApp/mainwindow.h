@@ -84,6 +84,7 @@ public slots:
     void clearAll();
     void clearEntry();
     void transformPnumber();
+    void dotButtonPushed();
 
 private:
     QWidget *window;

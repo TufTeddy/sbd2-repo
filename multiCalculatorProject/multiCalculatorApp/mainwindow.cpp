@@ -26,25 +26,49 @@ void MainWindow::showHistory()
 
 void MainWindow::digitButtonPushed(QString digitString)
 {
-    std::string temp;
+    std::string temp = entryLineEdit->text().toStdString();
+    std::string firstPart, secondPart;
     if(mode == calcMode::complex){
+        size_t pos = temp.find('+');
+        firstPart = temp.substr(0, pos);
+        pos = temp.find('*');
+        secondPart = temp.substr(pos+1, temp.size()-1);
         if(!lrComplex){
-            dynamic_cast<TComplex*>(_number)->setNumberString(entryLineEdit->text().toStdString());
-            temp = dynamic_cast<TComplex*>(_number)->getRealStr();
-            qDebug() << QString::fromStdString(temp);
-            temp += digitString.toStdString();
-            //temp+="qwe";
-            dynamic_cast<TComplex*>(_number)->setRealStr(temp);
-            entryLineEdit->setText(QString::fromStdString(_number->getNumberAsString()));
+            if(firstPart[0] == '0' && firstPart[1] != '.')
+                firstPart = digitString.toStdString();
+            else {
+                firstPart += digitString.toStdString();
+            }
+
         }else{
-            temp = dynamic_cast<TComplex*>(_number)->getImaginaryStr();
-            temp += digitString.toStdString();
-            dynamic_cast<TComplex*>(_number)->setImaginaryStr(temp);
-            entryLineEdit->setText(QString::fromStdString(_number->getNumberAsString()));
+            if(secondPart[0] == '0' && secondPart[1] != '.')
+                secondPart = digitString.toStdString();
+            else {
+                secondPart += digitString.toStdString();
+            }
         }
+        entryLineEdit->setText(QString::fromStdString(firstPart+"+i*"+secondPart));
     }else if (mode==calcMode::pnumber){
         temp = entryLineEdit->text().toStdString() + digitString.toStdString();
         entryLineEdit->setText(QString::fromStdString(temp));
+    } else if (mode == calcMode::frac){
+        size_t pos = temp.find('/');
+        firstPart = temp.substr(0, pos);
+        secondPart = temp.substr(pos+1, temp.size()-1);
+        if (!lrFrac){
+            if(firstPart[0] == '0')
+                firstPart = digitString.toStdString();
+            else {
+                firstPart += digitString.toStdString();
+            }
+        } else {
+            if(secondPart[0] == '0')
+                secondPart = digitString.toStdString();
+            else {
+                secondPart += digitString.toStdString();
+            }
+        }
+        entryLineEdit->setText(QString::fromStdString(firstPart+"/"+secondPart));
     }
 }
 
@@ -76,7 +100,7 @@ void MainWindow::pnumberModButtonPushed()
     pBaseSlider->show();
     currentBaseLabel->show();
     setCurrentValidator();
-
+    setCurrentBase(numbersInt::A);
     dotButton->setEnabled(true);
     fracPartButton->setEnabled(false);
     complexPartButton->setEnabled(false);
@@ -124,8 +148,9 @@ void MainWindow::sliderEventSlot(int base)
 {
     currentBaseLabel->setText(QStringLiteral("Curr base: %1").arg(base));
     setCurrentBase(base);
-    setCurrentBaseToOperate(base);
     transformPnumber();
+    setCurrentBaseToOperate(base);
+    setCurrentValidator();
     checkButtonsToBase();
 }
 
@@ -333,9 +358,17 @@ void MainWindow::clearEntry()
 
 void MainWindow::transformPnumber()
 {
-    TANumber *temp = new TPNumber(entryLineEdit->text().toStdString(), QString::number(_currentBaseToOperate).toStdString());
-    entryLineEdit->setText(QString::fromStdString(temp->getNumberAsString()));
+    TANumber *temp = new TPNumber(entryLineEdit->text().toStdString(), QString::number(_currentBase).toStdString());
+    _number = temp;
+    dynamic_cast<TPNumber*>(_number)->setBase(_currentBaseToOperate);
+    qDebug() << QString::fromStdString(temp->getNumberAsString()) << " "<<entryLineEdit->text();
+    entryLineEdit->setText(QString::fromStdString(_number->getNumberAsString()));
     delete temp;
+}
+
+void MainWindow::dotButtonPushed()
+{
+
 }
 
 int MainWindow::currentBaseToOperate() const
@@ -351,17 +384,17 @@ void MainWindow::setCurrentBaseToOperate(int currentBaseToOperate)
 void MainWindow::setCurrentValidator()
 {
     if(mode == calcMode::pnumber){
-        QString rxLineEditString = QString("^[0-%1]*\\.[0-%1]{7}$").arg(_currentBase-1);
-        if(_currentBase > numbersInt::nine)
-            rxLineEditString = QString("^([0-%1]*[A-%2]*)*\\.([0-%1]?[A-%2]?){7}")
+        QString rxLineEditString = QString("^[0-%1]*\\.[0-%1]{7}$").arg(_currentBaseToOperate-1);
+        if(_currentBaseToOperate > numbersInt::nine)
+            rxLineEditString = QString("^([0-%1]*[A-%2]*)*\\.([0-%1]?[A-%2]?){7}$")
                     .arg(numbersInt::nine)
-                    .arg(QString('A' + _currentBase - numbersInt::B));
-        //qDebug() << rxLineEditString << endl;
+                    .arg(QString('A' + _currentBaseToOperate - numbersInt::B));
+        qDebug() << rxLineEditString << endl;
         QRegExp rxLineEdit(rxLineEditString);
         validatorLineEdit = new QRegExpValidator(rxLineEdit, this);
         entryLineEdit->setValidator(validatorLineEdit);
     }else if (mode == calcMode::complex){
-        QString rxLineEditString = QString("^[0-9]*\\.[0-9]{7}\\i[0-9]*\\.[0-9]{7}$");
+        QString rxLineEditString = QString("^[0-9]*\\.[0-9]{7}+i*[0-9]*\\.[0-9]{7}$");
         QRegExp rxLineEdit(rxLineEditString);
         validatorLineEdit = new QRegExpValidator(rxLineEdit, this);
         entryLineEdit->setValidator(validatorLineEdit);
