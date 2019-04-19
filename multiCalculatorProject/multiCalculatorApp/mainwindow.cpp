@@ -370,7 +370,23 @@ void MainWindow::transformPnumber()
 
 void MainWindow::dotButtonPushed()
 {
-
+    std::string temp = entryLineEdit->text().toStdString();
+    std::string firstPart, secondPart;
+    if(mode == calcMode::complex){
+        size_t pos = temp.find('+');
+        firstPart = temp.substr(0, pos);
+        pos = temp.find('*');
+        secondPart = temp.substr(pos+1, temp.size()-1);
+        if(!lrComplex){
+            if(firstPart.find('.') == std::string::npos){
+                firstPart += ".";
+            }
+            }else{
+                if(secondPart.find('.') == std::string::npos)
+                    secondPart += ".";
+            }
+    }
+    entryLineEdit->setText(QString::fromStdString(firstPart+"+i*"+secondPart));
 }
 
 int MainWindow::currentBaseToOperate() const
@@ -396,7 +412,7 @@ void MainWindow::setCurrentValidator()
         validatorLineEdit = new QRegExpValidator(rxLineEdit, this);
         entryLineEdit->setValidator(validatorLineEdit);
     }else if (mode == calcMode::complex){
-        QString rxLineEditString = QString("^[0-9]*\\.[0-9]{7}+i*[0-9]*\\.[0-9]{7}$");
+        QString rxLineEditString = QString("^[0-9]*\\.[0-9]*\\+\\i\\*[0-9]*\\.[0-9]*$");
         QRegExp rxLineEdit(rxLineEditString);
         validatorLineEdit = new QRegExpValidator(rxLineEdit, this);
         entryLineEdit->setValidator(validatorLineEdit);
@@ -508,6 +524,8 @@ void MainWindow::setViewOfOperationButtons()
     dotButton->setFixedHeight(30);
     dotButton->setFixedWidth(60);
     dotButton->setEnabled(false);
+    QObject::connect(dotButton, &QPushButton::clicked, this, &MainWindow::dotButtonPushed);
+
 
     changeSignButton = new QPushButton("±");
     changeSignButton->setFixedHeight(30);
