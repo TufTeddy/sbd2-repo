@@ -172,6 +172,7 @@ void MainWindow::plusButtonPushed()
         ctrlunit->setOperation(TOprtn::Add);
         return;
     }
+
     TANumber * tempObj = nullptr;
     if (mode == calcMode::complex){
         tempObj = new TComplex(entryLineEdit->text().toStdString());
@@ -265,6 +266,7 @@ void MainWindow::divButtonPushed()
 void MainWindow::resultButtonPushed()
 {    
     try {
+        if(ctrlunit->getCurState() == ctrlunit->cStart) return;
         toHistoryString = "";
         TANumber * tempObj = nullptr;
         if (mode == calcMode::complex){
