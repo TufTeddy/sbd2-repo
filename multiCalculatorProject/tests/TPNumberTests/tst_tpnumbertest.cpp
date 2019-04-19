@@ -17,6 +17,7 @@ private slots:
     void mult_data();
     void divide_data();
     void getNumberAsString_data();
+    void convert_data();
 
     void constructor();
     void stringConstructor();
@@ -25,6 +26,7 @@ private slots:
     void mult();
     void divide();
     void getNumberAsString();
+    void convert();
 };
 
 tpnumbertest::tpnumbertest()
@@ -104,6 +106,39 @@ void tpnumbertest::getNumberAsString_data()
 
 }
 
+void tpnumbertest::convert_data()
+{
+    QTest::addColumn<QString>("firstNum");
+    QTest::addColumn<QString>("firstNumBase");
+    QTest::addColumn<int>("secondBase");
+    QTest::addColumn<QString>("answer1");
+    QTest::addColumn<int>("thirdBase");
+    QTest::addColumn<QString>("answer2");
+
+    QTest::newRow("conv") << "52" << "10" << 4 << "310" << 16 << "34";
+    /*QTest::newRow("summ") << "10" << "2" << "4" << "10" << "6";
+    QTest::newRow("summ") << "4" << "10" << "10" << "2" << "110";
+    QTest::newRow("summ") << "AB.BA" << "16" << "-10" << "10" << "161.7265625";
+    QTest::newRow("summ") << "-AB.BA" << "16" << "20" << "3" << "-20010.2011212";*/
+
+}
+
+void tpnumbertest::convert()
+{
+    QFETCH(QString, firstNum);
+    QFETCH(QString, firstNumBase);
+    QFETCH(int, secondBase);
+    QFETCH(QString, answer1);
+    QFETCH(int, thirdBase);
+    QFETCH(QString, answer2);
+
+    TPNumber *obj = new TPNumber(firstNum.toStdString(), firstNumBase.toStdString());
+    obj->setBase(secondBase);
+    QCOMPARE(QString::fromStdString(obj->getNumberAsString()), answer1);
+    obj->setBase(thirdBase);
+    QCOMPARE(QString::fromStdString(obj->getNumberAsString()), answer2);
+}
+
 void tpnumbertest::getNumberAsString()
 {
     QFETCH(QString, number);
@@ -114,6 +149,7 @@ void tpnumbertest::getNumberAsString()
     TANumber *obj = new TPNumber(number.toStdString(), base.toStdString(), precision.toStdString());
     QCOMPARE(QString::fromStdString(dynamic_cast<TPNumber*>(obj)->getNumberAsString()), answer);
 }
+
 
 void tpnumbertest::summ_data()
 {

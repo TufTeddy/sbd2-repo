@@ -57,6 +57,7 @@ void MainWindow::digitButtonPushed(QString digitString)
             temp += digitString.toStdString();
 
         entryLineEdit->setText(QString::fromStdString(temp));
+        dynamic_cast<TPNumber*>(_number)->setNumberString(temp, _currentBaseToOperate);
     } else if (mode == calcMode::frac){
         size_t pos = temp.find('/');
         firstPart = temp.substr(0, pos);
@@ -153,8 +154,10 @@ void MainWindow::setViewOfSlider()
 void MainWindow::sliderEventSlot(int base)
 {
     currentBaseLabel->setText(QStringLiteral("Curr base: %1").arg(base));
+    dynamic_cast<TPNumber*>(_number)->setBase(base);
+    entryLineEdit->setText(QString::fromStdString(_number->getNumberAsString()));
     setCurrentBase(base);
-    transformPnumber();
+    //transformPnumber();
     setCurrentBaseToOperate(base);
     setCurrentValidator();
     checkButtonsToBase();
@@ -191,6 +194,8 @@ void MainWindow::plusButtonPushed()
         tempObj = new TPNumber(entryLineEdit->text().toStdString(), QString::number(_currentBaseToOperate).toStdString());
         _number = tempObj;
         entryLineEdit->setText("0");
+        dynamic_cast<TPNumber*>(_number)->setNumber(0);
+
     }
 
     ctrlunit->setOperation(TOprtn::Add, std::shared_ptr<TANumber>(_number));
@@ -215,6 +220,8 @@ void MainWindow::minusButtonPushed()
         tempObj = new TPNumber(entryLineEdit->text().toStdString(), QString::number(_currentBaseToOperate).toStdString());
         _number = tempObj;
         entryLineEdit->setText("0");
+        dynamic_cast<TPNumber*>(_number)->setNumber(0);
+
     }
 
     ctrlunit->setOperation(TOprtn::Sub, std::shared_ptr<TANumber>(_number));
@@ -239,6 +246,8 @@ void MainWindow::mulButtonPushed()
         tempObj = new TPNumber(entryLineEdit->text().toStdString(), QString::number(_currentBaseToOperate).toStdString());
         _number = tempObj;
         entryLineEdit->setText("0");
+        dynamic_cast<TPNumber*>(_number)->setNumber(0);
+
     }
 
     ctrlunit->setOperation(TOprtn::Mul, std::shared_ptr<TANumber>(_number));
@@ -263,6 +272,7 @@ void MainWindow::divButtonPushed()
         tempObj = new TPNumber(entryLineEdit->text().toStdString(), QString::number(_currentBaseToOperate).toStdString());
         _number = tempObj;
         entryLineEdit->setText("0");
+        dynamic_cast<TPNumber*>(_number)->setNumber(0);
     }
 
     ctrlunit->setOperation(TOprtn::Dvd, std::shared_ptr<TANumber>(_number));
@@ -289,6 +299,7 @@ void MainWindow::resultButtonPushed()
         }
 
         entryLineEdit->setText(QString::fromStdString(ctrlunit->doOperation(_number->clone())));
+        _number = nullptr;
         historyObject->addRecord(QString::fromStdString(ctrlunit->getLastActionAsString()));
     } catch (std::exception *exptn) {
         QMessageBox::warning(this, "Warning", exptn->what());
@@ -365,7 +376,7 @@ void MainWindow::clearEntry()
 
 void MainWindow::transformPnumber()
 {
-    TANumber *temp = new TPNumber(entryLineEdit->text().toStdString(), QString::number(_currentBase).toStdString());
+    TANumber *temp = new TPNumber(entryLineEdit->text().toStdString(), QString::number(oldbase).toStdString());
     _number = temp;
     dynamic_cast<TPNumber*>(_number)->setBase(_currentBaseToOperate);
     qDebug() << QString::fromStdString(temp->getNumberAsString()) << " "<<entryLineEdit->text();
@@ -532,7 +543,7 @@ void MainWindow::setViewOfMenu()
 
 void MainWindow::setViewOfMemoryBlock()
 {
-    memoryLabel = new QLabel("M");
+    memoryLabel = new QLabel("  M");
     memoryLabel->setFixedHeight(30);
     memoryLabel->setFixedWidth(60);
     memLoadButton = new QPushButton("ML");

@@ -134,7 +134,7 @@ private:
     TANumber *_number;
     calcMode mode = calcMode::complex;
     QString toHistoryString = "";
-
+    int oldbase = numbersInt::A;
 
     void setCurrentValidator();
     void setViewOfSlider();
