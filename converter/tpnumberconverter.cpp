@@ -48,49 +48,6 @@ TPNumber TPNumberConverter::from10(TPNumber number, int needBase)
 
 TPNumber TPNumberConverter::to10(TPNumber number, int curBase)
 {
-    /*
-    _currentBase = curBase;
-    _precision = number.getPrecision();
-
-    double tempNumber = number.getNumber();
-    int intPart = static_cast<int>(tempNumber);
-    double fracPart = tempNumber - intPart;
-
-    std::string answer;
-    std::string temp;
-    temp = std::to_string(intPart);
-    int len = temp.length();
-    int power = 1; // Initialize power of base
-    int num = 0;  // Initialize result
-    int i;
-
-    for (i = len - 1; i >= 0; i--)
-    {
-        // A digit in input number must be
-        // less than number's base
-        num += fromCharToChar(temp[i]) * power;
-        power = power * curBase;
-    }
-    answer = std::to_string(num);
-
-    fracPart *= 10000000;
-    temp = std::to_string(static_cast<int>(fracPart));
-
-    qDebug() << fracPart <<QString::fromStdString(temp);
-    len = temp.length();
-    power = -1;
-    num = 0;
-    int c = 0;
-    for (i = len-1; i >=0; i--){
-        num += fromCharToChar(temp[i]) * power;
-        power = power / curBase;
-        c++;
-        if (c >= _precision)
-            break;
-    }
-    num/=10000000;
-    answer = answer + "." + std::to_string(num);
-    qDebug() << QString::fromStdString(answer);*/
     double fracPart = number.getNumber();
     std::string answer = std::to_string(fracPart);
 
