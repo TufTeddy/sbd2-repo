@@ -15,7 +15,9 @@ TEMPLATE = app
 # any feature of Qt which has been marked as deprecated (the exact warnings
 # depend on your compiler). Please consult the documentation of the
 # deprecated API in order to know how to port your code away from it.
-DEFINES += QT_DEPRECATED_WARNINGS
+DEFINES += QT_DEPRECATED_WARNINGS \
+    _USE_MATH_DEFINES
+
 
 # You can also make your code fail to compile if you use deprecated APIs.
 # In order to do so, uncomment the following line.
@@ -26,10 +28,26 @@ CONFIG += c++11
 
 SOURCES += \
         main.cpp \
-        mainwindow.cpp
+        mainwindow.cpp \
+    tanumber.cpp \
+    tpnumber.cpp \
+    tcomplex.cpp \
+    tfrac.cpp \
+    tproc.cpp \
+    tmemory.cpp \
+    tctrl.cpp \
+    history.cpp
 
 HEADERS += \
-        mainwindow.h
+        mainwindow.h \
+    tanumber.h \
+    tpnumber.h \
+    tcomplex.h \
+    tfrac.h \
+    tproc.h \
+    tmemory.h \
+    tctrl.h \
+    history.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
