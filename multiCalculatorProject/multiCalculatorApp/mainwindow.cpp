@@ -49,7 +49,13 @@ void MainWindow::digitButtonPushed(QString digitString)
         }
         entryLineEdit->setText(QString::fromStdString(firstPart+"+i*"+secondPart));
     }else if (mode==calcMode::pnumber){
-        temp = entryLineEdit->text().toStdString() + digitString.toStdString();
+        temp = entryLineEdit->text().toStdString();
+        if(temp[0] == '0' && temp[1] != '.'){
+            temp = digitString.toStdString();
+        }
+        else
+            temp += digitString.toStdString();
+
         entryLineEdit->setText(QString::fromStdString(temp));
     } else if (mode == calcMode::frac){
         size_t pos = temp.find('/');
@@ -159,7 +165,6 @@ void MainWindow::checkButtonsToBase()
     for (auto it : vectorOfButtons){
         it->setEnabled(false);
     }
-
     for (int i = 0; i < _currentBase; ++i)
     {
         vectorOfButtons[i]->setEnabled(true);
@@ -385,8 +390,73 @@ void MainWindow::dotButtonPushed()
                 if(secondPart.find('.') == std::string::npos)
                     secondPart += ".";
             }
+        entryLineEdit->setText(QString::fromStdString(firstPart+"+i*"+secondPart));
     }
-    entryLineEdit->setText(QString::fromStdString(firstPart+"+i*"+secondPart));
+    else if(mode == calcMode::pnumber){
+        if(temp.find('.') == std::string::npos)
+            temp.push_back('.');
+        entryLineEdit->setText(QString::fromStdString(temp));
+    }
+}
+
+void MainWindow::backSpaceButtonPushed()
+{
+    std::string temp = entryLineEdit->text().toStdString();
+    std::string firstPart, secondPart;
+    if(mode == calcMode::complex){
+        size_t pos = temp.find('+');
+        firstPart = temp.substr(0, pos);
+        pos = temp.find('*');
+        secondPart = temp.substr(pos+1, temp.size()-1);
+        if(!lrComplex){
+            if(firstPart[0] == '0' && firstPart[1] != '.')
+                return;
+            else if(firstPart.size() == 1)
+                firstPart = "0";
+            else {
+                firstPart.pop_back();
+            }
+
+        }else{
+            if(secondPart[0] == '0' && secondPart[1] != '.')
+                return;
+            else if(secondPart.size() == 1)
+                secondPart = "0";
+            else {
+                secondPart.pop_back();
+            }
+        }
+        entryLineEdit->setText(QString::fromStdString(firstPart+"+i*"+secondPart));
+    }else if (mode==calcMode::pnumber){
+        temp = entryLineEdit->text().toStdString();
+        if(temp.size() == 1){
+            temp = "0";
+        }else
+            temp.pop_back();
+        entryLineEdit->setText(QString::fromStdString(temp));
+    } else if (mode == calcMode::frac){
+        size_t pos = temp.find('/');
+        firstPart = temp.substr(0, pos);
+        secondPart = temp.substr(pos+1, temp.size()-1);
+        if (!lrFrac){
+            if(firstPart[0] == '0' && firstPart[1] != '.')
+                return;
+            else if(firstPart.size() == 1)
+                firstPart = "0";
+            else {
+                firstPart.pop_back();
+            }
+        } else {
+            if(secondPart[0] == '0' && secondPart[1] != '.')
+                return;
+            else if(secondPart.size() == 1)
+                secondPart = "1";
+            else {
+                secondPart.pop_back();
+            }
+        }
+        entryLineEdit->setText(QString::fromStdString(firstPart+"/"+secondPart));
+    }
 }
 
 int MainWindow::currentBaseToOperate() const
@@ -508,7 +578,7 @@ void MainWindow::setViewOfOperationButtons()
     backSpaceButton = new QPushButton("BS");
     backSpaceButton->setFixedHeight(30);
     backSpaceButton->setFixedWidth(60);
-    backSpaceButton->setEnabled(false);
+    QObject::connect(backSpaceButton, &QPushButton::clicked, this, &MainWindow::backSpaceButtonPushed);
 
     clearAllButton = new QPushButton("C");
     clearAllButton->setFixedHeight(30);
